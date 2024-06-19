@@ -13,6 +13,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+var fiberConfig = fiber.Config{
+	ErrorHandler: api.ErrorHandler,
+}
+
 func init(){
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
@@ -36,7 +40,7 @@ func main() {
 		userHandler = api.NewUserHandler(userStore)
 
 		// Api
-		app = fiber.New()
+		app = fiber.New(fiberConfig)
 		apiV1 = app.Group("/api/v1")
 	)
 
