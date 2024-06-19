@@ -27,13 +27,26 @@ func main() {
 	}
 
 
-	app := fiber.New()
-	apiV1 := app.Group("/api/v1")
+	// Initializations
+	var (
+		// Stores
+		userStore = db.NewMongoUserStore(client)
 
-	userHandler := api.NewUserHandler(db.NewMongoUserStore(client))
+		// Handlers
+		userHandler = api.NewUserHandler(userStore)
 
-	apiV1.Get("/users", userHandler.HandleGetUsers)
-	apiV1.Get("/users/:id", userHandler.HandleGetUser)
+		// Api
+		app = fiber.New()
+		apiV1 = app.Group("/api/v1")
+	)
+
+
+	// User handlers
+	apiV1.Get("/user", userHandler.HandleGetUsers)
+	apiV1.Post("/user", userHandler.HandlePostUser)
+	apiV1.Get("/user/:id", userHandler.HandleGetUser)
+	apiV1.Put("/user/:id", userHandler.HandlePutUser)
+	apiV1.Delete("/user/:id", userHandler.HandleDeleteUser)
 
 	listenAddr := os.Getenv("LISTEN_ADDRESS")
 	app.Listen(listenAddr)
