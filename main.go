@@ -34,7 +34,7 @@ func main() {
 	// Initializations
 	var (
 		// Stores
-		userStore = db.NewMongoUserStore(client)
+		userStore = db.NewMongoUserStore(client, db.DB_NAME)
 
 		// Handlers
 		userHandler = api.NewUserHandler(userStore)
