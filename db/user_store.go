@@ -2,7 +2,9 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"hotel-reservation/types"
+	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,6 +15,8 @@ const userCollection = "users"
 type Map map[string]any
 
 type UserStore interface {
+	Dropper
+
 	GetUsers(context.Context) ([]*types.User, error)
 	GetUserById(context.Context, string) (*types.User, error)
 	CreateUser(context.Context, *types.User) (*types.User, error)
@@ -25,11 +29,17 @@ type MongoUserStore struct {
 	collection *mongo.Collection
 }
 
-func NewMongoUserStore(client *mongo.Client, db_name string) *MongoUserStore {
+func NewMongoUserStore(client *mongo.Client) *MongoUserStore {
+	db_name := os.Getenv(DB_NAME)
 	return &MongoUserStore{
 		client: client,
 		collection: client.Database(db_name).Collection(userCollection),
 	}
+}
+
+func (s *MongoUserStore) Drop(ctx context.Context) error {
+	fmt.Println("Dropping user collections")
+	return s.collection.Drop(ctx)
 }
 
 func (s *MongoUserStore) GetUsers(ctx context.Context) ([]*types.User, error) {
@@ -40,7 +50,7 @@ func (s *MongoUserStore) GetUsers(ctx context.Context) ([]*types.User, error) {
 
 	var users []*types.User
 	if err := cur.All(ctx, &users); err != nil {
-		return users, err
+		return nil, err
 	}
 
 	return users, nil

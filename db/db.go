@@ -1,9 +1,13 @@
 package db
 
-const (
-	DB_NAME      = "MONGO_DB_NAME"
-	TEST_DB_NAME = "MONGO_TEST_DB_NAME"
-)
+import "context"
+
+const DB_NAME = "MONGO_DB_NAME"
+
+
+type Dropper interface {
+	Drop(context.Context) error
+}
 
 type Store struct {
 	User UserStore

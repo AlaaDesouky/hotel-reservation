@@ -18,7 +18,7 @@ type testDB struct {
 } 
 
 func (tdb *testDB) teardown(t *testing.T) {
-	dbName := os.Getenv(db.TEST_DB_NAME)
+	dbName := os.Getenv(db.DB_NAME)
 	if err := tdb.client.Database(dbName).Drop(context.TODO()); err != nil {
 		t.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func setup(t *testing.T) *testDB {
 	return &testDB{
 		client: client,
 		Store: &db.Store{
-			User: db.NewMongoUserStore(client, os.Getenv(db.TEST_DB_NAME)),
+			User: db.NewMongoUserStore(client),
 		},
 	}
 }
