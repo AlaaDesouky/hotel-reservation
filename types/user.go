@@ -70,7 +70,7 @@ type User struct {
 	LastName  string `bson:"lastName" json:"lastName,omitempty"`
 	Email     string `bson:"email" json:"email,omitempty"`
 	Password  string `bson:"password" json:"-"`
-	IsAdmin   string `bson:"isAdmin" json:"isAdmin"`
+	IsAdmin   bool `bson:"isAdmin" json:"isAdmin"`
 }
 
 

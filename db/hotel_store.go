@@ -96,8 +96,10 @@ func (s *MongoHotelStore) UpdateHotel(ctx context.Context, filter Map, params ty
 
 	data := bson.M{}
 
-	if val, ok := p["rooms"]; ok {
-		data["$push"] = bson.M{"rooms": val}
+	if _, ok := p["rooms"]; ok {
+		for key, val := range p["rooms"].(bson.M) {
+			data[key] = bson.M{"rooms": val}
+		}
 		delete(p, "rooms")
 	}
 

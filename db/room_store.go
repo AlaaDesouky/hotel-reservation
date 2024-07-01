@@ -82,9 +82,9 @@ func (s *MongoRoomStore) CreateRoom(ctx context.Context, room *types.Room) (*typ
 	room.ID = res.InsertedID.(primitive.ObjectID)
 
 	// Add room to hotel
-	filter := Map{"_id": room.HotelID}
+	filter := Map{"_id": room.HotelID.Hex()}
 	update := types.UpdateHotelParams{
-		Rooms: []primitive.ObjectID{room.ID},
+		Rooms: bson.M{"$push": []primitive.ObjectID{room.ID}},
 	}
 
 	if err := s.HotelStore.UpdateHotel(ctx, filter, update); err != nil {
@@ -116,8 +116,22 @@ func (s *MongoRoomStore) DeleteRoom(ctx context.Context, id string) error {
 		return  err
 	}
 
+	var room types.Room
+	if err := s.collection.FindOne(ctx,bson.M{"_id": oid}).Decode(&room); err != nil {
+		return err
+	}
+
 	_, err = s.collection.DeleteOne(ctx, bson.M{"_id": oid})
 	if err != nil {
+		return err
+	}
+
+	filter := Map{"_id": room.HotelID.Hex()}
+	update := types.UpdateHotelParams{
+		Rooms: bson.M{"$pull": []primitive.ObjectID{room.ID}},
+	}
+
+	if err := s.HotelStore.UpdateHotel(ctx, filter, update); err != nil {
 		return err
 	}
 

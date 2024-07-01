@@ -15,7 +15,7 @@ type UpdateHotelParams struct {
 	Name string `json:"name"`
 	Location string `json:"location"`
 	Rating int `json:"rating"`
-	Rooms []primitive.ObjectID `json:"rooms"`
+	Rooms bson.M `json:"rooms"`
 }
 
 func (p UpdateHotelParams) ToBSON() bson.M {
