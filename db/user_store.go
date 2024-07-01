@@ -12,7 +12,6 @@ import (
 )
 
 const userCollection = "users"
-type Map map[string]any
 
 type UserStore interface {
 	Dropper
