@@ -98,7 +98,9 @@ func (s *MongoHotelStore) UpdateHotel(ctx context.Context, filter Map, params ty
 
 	if _, ok := p["rooms"]; ok {
 		for key, val := range p["rooms"].(bson.M) {
-			data[key] = bson.M{"rooms": val}
+			for _, id := range val.([]primitive.ObjectID) {
+				data[key] = bson.M{"rooms": id}
+			}
 		}
 		delete(p, "rooms")
 	}
