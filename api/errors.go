@@ -38,3 +38,17 @@ func ErrorInvalidID() Error{
 		Err: "invalid id",
 	}
 }
+
+func ErrorUnAuthorized() Error {
+	return Error{
+		Code: http.StatusUnauthorized,
+		Err: "unauthorized request",
+	}
+}
+
+func ErrorExpiredToken() Error {
+	return Error{
+		Code: http.StatusUnauthorized,
+		Err: "token expired",
+	}
+}
