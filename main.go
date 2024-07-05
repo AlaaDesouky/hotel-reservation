@@ -56,6 +56,7 @@ func main() {
 		app = fiber.New(fiberConfig)
 		authV1 = app.Group("/api/auth")
 		apiV1 = app.Group("/api/v1", api.JWTAuthentication(userStore))
+		adminV1 = apiV1.Group("/admin", api.AdminAuth)
 	)
 
 	// Auth handlers
@@ -82,6 +83,9 @@ func main() {
 	apiV1.Get("/booking/:id", bookingHandler.HandleGetBooking)
 	apiV1.Post("/booking/:id/cancel", bookingHandler.HandleCancelBooking)
 
+	// Admin handlers
+	adminV1.Get("/booking", bookingHandler.HandleGetBookings)
+	
 	listenAddr := os.Getenv("LISTEN_ADDRESS")
 	app.Listen(listenAddr)
 }
