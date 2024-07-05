@@ -52,3 +52,10 @@ func ErrorExpiredToken() Error {
 		Err: "token expired",
 	}
 }
+
+func ErrorInternalServer() Error {
+	return Error{
+		Code: http.StatusInternalServerError,
+		Err: "something went wrong",
+	}
+}
