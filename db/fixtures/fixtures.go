@@ -6,6 +6,7 @@ import (
 	"hotel-reservation/db"
 	"hotel-reservation/types"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -68,4 +69,18 @@ func AddRoom(store *db.Store, size string, seaside bool, price float64, hotelID 
 	}
 
 	return insertedRoom
+}
+
+func AddBooking(store *db.Store, uid, rid primitive.ObjectID, from, till time.Time) *types.Booking {
+	booking := &types.Booking{
+		UserID:   uid,
+		RoomID:   rid,
+		FromDate: from,
+		TillDate: till,
+	}
+	insertedBooking, err := store.Booking.CreateBooking(context.Background(), booking)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return insertedBooking
 }

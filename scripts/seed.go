@@ -51,7 +51,7 @@ func main() {
 		go func(){
 			defer wg.Done()
 
-			fixtures.AddUser(store, generateRandomName(7), generateRandomName(7), false)
+			fixtures.AddUser(store, generateRandomName(7), generateRandomName(7), mRand.Intn(2) == 0)
 
 			hotel := fixtures.AddHotel(store, generateRandomName(7) + " hotel", generateRandomName(7) + " city", mRand.Intn(5)+1, nil)
 
